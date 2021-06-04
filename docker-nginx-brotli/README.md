@@ -1,0 +1,2 @@
+# Credit
+This Dockerfile is taken directly from [docker-nginx-brotli](https://github.com/Korijn/docker-nginx-brotli) made by user [Korijn](https://github.com/Korijn). All credit to this amazing Docker file goes to him!
