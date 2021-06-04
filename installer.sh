@@ -15,6 +15,10 @@ function arch_install {
     sed -i -r 's/(listen .*443)/\1; #/g; s/(ssl_(certificate|certificate_key|trusted_certificate) )/#;#\1/g; s/(server \{)/\1\n    ssl off;/g' ./config/nginx/sites-available/nodeapp.conf
     sed -i -r 's/(listen .*443)/\1; #/g; s/(ssl_(certificate|certificate_key|trusted_certificate) )/#;#\1/g; s/(server \{)/\1\n    ssl off;/g' ./config/nginx/sites-enabled/nodeapp.conf
 
+    echo "### Starting node app ..."
+    docker-compose up --force-recreate -d nodeapp
+    echo
+
     echo "### Starting nginx ..."
     docker-compose up --force-recreate -d nginx
     echo
