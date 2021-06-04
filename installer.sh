@@ -2,11 +2,13 @@
 website_name="newname"
 email_arg="email@example.com"
 domain_arg="$website_name.com"
+$rsa_key_size=4096
 
 function arch_install {
     sudo pacman -Sy
     sudo pacman -S docker docker-compose openssl
-
+    sudo systemctl enable docker
+    sudo systemctl start docker
     openssl dhparam -out ./config/nginx/dhparam.pem 2048
 
     sed -i "s/website/$website_name/g" ./config/nginx/sites-available/nodeapp.conf
@@ -23,7 +25,6 @@ function arch_install {
     docker-compose up --force-recreate -d nginx
     echo
 
-    # certbot certonly --webroot -d paulnak.com --email info@paulnak.com -w /var/www/_letsencrypt -n --agree-tos --force-renewal
     docker-compose run --rm --entrypoint "\
         certbot certonly --webroot -w /var/www/letsencrypt \
             $email_arg \
