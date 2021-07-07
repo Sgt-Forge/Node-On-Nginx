@@ -1,8 +1,16 @@
+#!/bin/bash
 # Don't include the ".com" at the end of the name
 website_name="newname"
 email_arg="email@example.com"
 domain_arg="$website_name.com"
-$rsa_key_size=4096
+rsa_key_size=4096
+
+function logger {
+    function_name=$1
+    message=$2
+    log="$(date) | $function_name | $message"
+    echo $log
+}
 
 function arch_install {
     sudo pacman -Sy
@@ -40,6 +48,19 @@ function arch_install {
     docker-compose exec nginx nginx -s reload
 }
 
+function centos_install {
+    function_name="centos_install"
+    echo "==============================================================================="
+    echo "                      BEGIN INSTALL ON CENTOS"
+    echo "==============================================================================="
+    logger $function_name "Installing yum-utils"
+    # sudo yum install -y yum-utils
+    # sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    # sudo yum install -y docker-ce docker-ce-cli containerd.io
+    # sudo systemctl enable docker
+    # sudo systemctl start docker
+}
+
 if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
     . /etc/os-release
@@ -67,4 +88,6 @@ fi
 
 if [ "$ID" == "arch" ] ; then
     arch_install
+elif [ "$ID" == "centos" ] ; then
+    centos_install
 fi
