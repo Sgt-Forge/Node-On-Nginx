@@ -54,11 +54,22 @@ function centos_install {
     echo "                      BEGIN INSTALL ON CENTOS"
     echo "==============================================================================="
     logger $function_name "Installing yum-utils"
-    # sudo yum install -y yum-utils
-    # sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    # sudo yum install -y docker-ce docker-ce-cli containerd.io
-    # sudo systemctl enable docker
-    # sudo systemctl start docker
+    sudo yum install -y yum-utils
+
+    sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    sudo yum install -y docker-ce docker-ce-cli containerd.io
+    logger $function_name "Enabling Docker as a service"
+    sudo systemctl enable docker
+    logger $function_name "Starting Docker service"
+    sudo systemctl start docker
+
+    logger $function_name "Creating dhparam.pem with openssl"
+    openssl dhparam -out ./config/nginx/dhparam.pem 2048
+
+    logger $function_name "Commenting out ssl configuration in ./config/nginx/sites-available/nodeapp for certbot"
+    sed -i -r 's/(listen .*443)/\1; #/g; s/(ssl_(certificate|certificate_key|trusted_certificate) )/#;#\1/g; s/(server \{)/\1\n    ssl off;/g' ./config/nginx/sites-available/nodeapp.conf
+    sed -i -r 's/(listen .*443)/\1; #/g; s/(ssl_(certificate|certificate_key|trusted_certificate) )/#;#\1/g; s/(server \{)/\1\n    ssl off;/g' ./config/nginx/sites-enabled/nodeapp.conf
+    
 }
 
 if [ -f /etc/os-release ]; then
