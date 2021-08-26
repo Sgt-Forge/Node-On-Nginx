@@ -1,0 +1,3 @@
+*.pem
+config/certbot
+nodeapp/node_modules

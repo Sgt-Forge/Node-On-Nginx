@@ -23,7 +23,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   nodeapp:
     build:
-      context: "./nodeapp"
+      context: "../BNW"
       dockerfile: "Dockerfile"
   mongo:
     image: mongo
